@@ -1,11 +1,36 @@
 import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import "./pokemon.css";
+
+interface PokemonType {
+  name: string;
+  url: string;
+}
+
+interface Pokemon {
+  name: string;
+  types: {
+    type: {
+      name: string;
+    };
+  }[];
+  sprites: {
+    front_default: string;
+  };
+  stats: {
+    base_stat: number;
+    stat: {
+      name: string;
+    };
+  }[];
+}
 
 function Pokemon() {
-  const [pokemon, setPokemon] = useState<any[]>([]);
-
+  const [selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(null);
+  const [pokemon, setPokemon] = useState<PokemonType[]>([]);
   const [search, setSearch] = useState<string>("");
+  const [dropdownClicked, setDropdownClicked] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchPokemon = async () => {
@@ -14,7 +39,6 @@ function Pokemon() {
           `https://pokeapi.co/api/v2/pokemon/?name=${search}`
         );
         setPokemon(response.data.results);
-        setSearch(search);
       } catch (error) {
         console.log(error);
       }
@@ -22,38 +46,80 @@ function Pokemon() {
     fetchPokemon();
   }, [search]);
 
-  const pokeList = pokemon.filter((poke)=> {
-    const name = poke.name.toLowerCase();
-    const searchText = search.toLowerCase();
-    return searchText && name.startsWith(searchText);
-  }).map((poke) => <div onClick={(e: React.MouseEvent<HTMLDivElement>) => setSearch(poke.name)}  className="pokemon-wrapper">{poke.name}</div>);
+  useEffect(() => {
+    const fetchSelectedPokemon = async () => {
+      try {
+        if (!dropdownClicked) {
+          return;
+        }
+        const response = await axios.get<Pokemon>(
+          `https://pokeapi.co/api/v2/pokemon/${search}`
+        );
+        setSelectedPokemon(response.data);
+        console.log("fetchedSelectedPokemon", response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchSelectedPokemon();
+  }, [search, dropdownClicked]);
 
+  const pokeList = pokemon
+    .filter((poke) => {
+      const name = poke.name.toLowerCase();
+      const searchText = search.toLowerCase();
+      return searchText && name.startsWith(searchText);
+    })
+    .map((poke) => (
+      <div
+        onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+          setSearch(poke.name);
+          setDropdownClicked(true);
+        }}
+        className="dropdown-option"
+      >
+        {poke.name}
+      </div>
+    ));
 
   function handleChange(e: any) {
-    e.preventDefault();
     setSearch(e.target.value);
+    setDropdownClicked(false);
   }
-
-  console.log(pokemon);
 
   return (
     <>
-      <form>
-        <input
-          type="text"
-          id="search"
-          placeholder="Search"
-          onChange={handleChange}
-          value={search || ""}
-        />
-        <button onClick={() => setSearch(search)} type="submit">Search</button>
-        {/* {Need the button to pull the info of the pokemon selected from its url. Need 2nd fetch function fetchPokemonData} */}
-        {pokemon.filter((data)=> {
-          const url = data.url;
-          return url;
-        }).map((data) => <div>{data.url}</div>)}
-      </form>
-      {pokeList}
+      <input
+        type="text"
+        id="search"
+        placeholder="Search"
+        onChange={handleChange}
+        value={search || ""}
+      />
+      <div className="dropdown">{pokeList}</div>
+
+      {selectedPokemon && (
+        <>
+          <div className="pokemon-type">
+            <img src={selectedPokemon.sprites.front_default} />
+            <div>
+              <h2>
+                {selectedPokemon.name.charAt(0).toUpperCase() +
+                  selectedPokemon.name.slice(1)}
+              </h2>
+              <div className="type">{selectedPokemon.types[0].type.name}</div>
+            </div>
+          </div>
+          <ul className="stats-wrapper">
+            {selectedPokemon.stats.map((stat) => (
+              <li key={stat.stat.name}>
+                {stat.stat.name.toUpperCase()} <span>{stat.base_stat}</span>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+      {dropdownClicked && <button className="capture-btn">Capture</button>}
     </>
   );
 }

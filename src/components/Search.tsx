@@ -5,7 +5,7 @@ import React from "react";
 // import TextField from "@mui/material/TextField";
 
 function Search() {
-  return <div>Search</div>;
+  return <div></div>;
 }
 
 export default Search;

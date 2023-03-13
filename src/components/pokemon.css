@@ -1,0 +1,41 @@
+.dropdown-option {
+  background: #ffffff;
+  border: 1px solid #4f1413;
+  padding: 8px;
+  width: 236px;
+  color: #000000;
+}
+
+.pokemon-type {
+  display: flex;
+  margin-top: 40px;
+}
+
+.stats-wrapper {
+  list-style: none;
+  margin: 0 0 20px 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.stats-wrapper li {
+  margin-right: 40px;
+  font-weight: 600;
+}
+
+.stats-wrapper li span {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.capture-btn {
+  height: 60px;
+  border: 8px solid #4f1413;
+  color: #000000;
+  font-size: 20px;
+  padding: 5px 15px;
+  width: 80%;
+}
