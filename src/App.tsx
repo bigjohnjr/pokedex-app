@@ -7,9 +7,6 @@ function App() {
   return (
     <div className="App">
       <Pokemon />
-      {/* <div className="right-box">
-        <CaptureList />
-      </div> */}
     </div>
   );
 }

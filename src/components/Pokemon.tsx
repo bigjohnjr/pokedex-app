@@ -32,6 +32,21 @@ function Pokemon() {
   const [pokemon, setPokemon] = useState<PokemonType[]>([]);
   const [search, setSearch] = useState<string>("");
   const [dropdownClicked, setDropdownClicked] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(5);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentCapturedPokemon = capturedPokemon.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  const totalPages = Math.ceil(capturedPokemon.length / itemsPerPage);
+
+  function handlePageChange(newPage: number) {
+    setCurrentPage(newPage);
+  }
 
   useEffect(() => {
     const fetchPokemon = async () => {
@@ -92,13 +107,10 @@ function Pokemon() {
     e.preventDefault();
     if (selectedPokemon) {
       const spriteUrl = selectedPokemon?.sprites.front_default;
-      console.log("Selected Pokemon:", selectedPokemon);
-      console.log("Sprite URL:", spriteUrl);
       setCapturedPokemon((prevCapturedPokemonList) => [
         ...prevCapturedPokemonList,
         spriteUrl,
       ]);
-      console.log("Captured Pokemon:", capturedPokemon);
     }
   }
 
@@ -142,9 +154,22 @@ function Pokemon() {
         )}
       </div>
       <div className="right-box">
-        {capturedPokemon.map((spriteUrl) => (
+        {currentCapturedPokemon.map((spriteUrl) => (
           <img src={spriteUrl} />
         ))}
+        {totalPages > 1 && (
+          <div className="pagination">
+            {[...Array(totalPages)].map((_, index) => (
+              <button
+                key={index + 1}
+                onClick={() => handlePageChange(index + 1)}
+                className={currentPage === index + 1 ? "active" : ""}
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </>
   );
