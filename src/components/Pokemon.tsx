@@ -97,7 +97,6 @@ function Pokemon() {
         {poke.name}
       </div>
     ));
-
   function handleChange(e: any) {
     setSearch(e.target.value);
     setDropdownClicked(false);
