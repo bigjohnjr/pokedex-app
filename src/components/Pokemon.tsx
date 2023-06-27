@@ -116,6 +116,7 @@ function Pokemon() {
   return (
     <>
       <div className="left-box">
+        <h2 className="tooltip-text">Search for a Pokemon</h2>
         <input
           type="text"
           id="search"
@@ -147,12 +148,16 @@ function Pokemon() {
           </>
         )}
         {dropdownClicked && (
-          <button className="capture-btn" onClick={handleCapture}>
-            Capture
-          </button>
+          <>
+            <h2 className="tooltip-text">Click button to capture Pokemon</h2>
+            <button className="capture-btn" onClick={handleCapture}>
+              Capture
+            </button>
+          </>
         )}
       </div>
       <div className="right-box">
+        <h2 className="tooltip-text">Capture List</h2>
         {currentCapturedPokemon.map((spriteUrl) => (
           <img src={spriteUrl} />
         ))}
