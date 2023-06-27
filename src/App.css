@@ -64,3 +64,25 @@ h2.tooltip-text {
   padding: 18px;
   margin: 0 30px 20px 0;
 }
+
+@media (max-width: 767px) {
+  .App {
+    flex-wrap: wrap;
+  }
+  .left-box {
+    width: 100%;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 10px;
+    border-right: 8px solid #4f1413;
+  }
+  ul.stats-wrapper {
+    flex-wrap: wrap;
+  }
+  .right-box {
+    width: 65%;
+    margin-top: 0;
+    border-left: 8px solid #4f1413;
+  }
+}
