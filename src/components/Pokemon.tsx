@@ -52,7 +52,7 @@ function Pokemon() {
     const fetchPokemon = async () => {
       try {
         const response = await axios.get<any>(
-          `https://pokeapi.co/api/v2/pokemon/?name=${search}`
+          `https://pokeapi.co/api/v2/pokemon/?limit=2000&offset=0`
         );
         setPokemon(response.data.results);
       } catch (error) {
@@ -60,7 +60,7 @@ function Pokemon() {
       }
     };
     fetchPokemon();
-  }, [search]);
+  }, []);
 
   useEffect(() => {
     const fetchSelectedPokemon = async () => {
@@ -84,10 +84,12 @@ function Pokemon() {
     .filter((poke) => {
       const name = poke.name.toLowerCase();
       const searchText = search.toLowerCase();
-      return searchText && name.startsWith(searchText);
+      return searchText && name.startsWith(searchText) && !name.includes("-");
     })
+    .slice(0, 10)
     .map((poke) => (
       <div
+        key={poke.name}
         onClick={(e: React.MouseEvent<HTMLDivElement>) => {
           setSearch(poke.name);
           setDropdownClicked(true);
