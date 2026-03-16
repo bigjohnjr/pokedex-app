@@ -39,7 +39,7 @@ function Pokemon() {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentCapturedPokemon = capturedPokemon.slice(
     indexOfFirstItem,
-    indexOfLastItem
+    indexOfLastItem,
   );
 
   const totalPages = Math.ceil(capturedPokemon.length / itemsPerPage);
@@ -52,7 +52,7 @@ function Pokemon() {
     const fetchPokemon = async () => {
       try {
         const response = await axios.get<any>(
-          `https://pokeapi.co/api/v2/pokemon/?limit=2000&offset=0`
+          `https://pokeapi.co/api/v2/pokemon/?limit=2000&offset=0`,
         );
         setPokemon(response.data.results);
       } catch (error) {
@@ -69,10 +69,9 @@ function Pokemon() {
           return;
         }
         const response = await axios.get<Pokemon>(
-          `https://pokeapi.co/api/v2/pokemon/${search}`
+          `https://pokeapi.co/api/v2/pokemon/${search}`,
         );
         setSelectedPokemon(response.data);
-        // console.log("fetchedSelectedPokemon", response.data);
       } catch (error) {
         console.log(error);
       }
